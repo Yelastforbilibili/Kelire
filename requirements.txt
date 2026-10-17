@@ -1,0 +1,9 @@
+# 运行依赖（Windows / Python 3.10+）
+# 实测版本：PySide6 6.12.0、yt-dlp 2025.12.08、pycryptodome 3.23.0、
+#           imageio-ffmpeg 0.6.0、requests 2.32.5、pillow 10.4.0
+PySide6>=6.6
+yt-dlp>=2024.1.1
+pycryptodome>=3.20
+imageio-ffmpeg>=0.5
+requests>=2.31
+pillow>=10.0
