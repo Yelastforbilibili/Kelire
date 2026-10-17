@@ -147,6 +147,8 @@ class SettingsPage(QWidget):
 
     # ---------------------------------------------------------------- 设置项搜索
     def _on_panel_toggled(self, panel: "CollapsiblePanel", expanded: bool) -> None:
+        if getattr(self, "_filtering", False):
+            return  # 搜索时的强制展开/收起不算用户的选择
         self._expanded_state[panel] = expanded
 
     def _collect_rows(self, panel: QWidget) -> list[tuple[QWidget, str]]:
@@ -193,22 +195,26 @@ class SettingsPage(QWidget):
     def _filter_settings(self, text: str) -> None:
         tokens = [token for token in text.strip().casefold().split() if token]
         matched_any = False
-        for panel, rows in self._panels:
-            panel_matched = False
-            for widget, keywords in rows:
-                ok = not tokens or all(token in keywords for token in tokens)
-                widget.setVisible(ok)
-                if ok:
-                    panel_matched = True
-            if tokens:
-                panel.setVisible(panel_matched)
-                if panel_matched:
-                    # 搜索结果直接展开，省得再点一次
-                    panel.set_expanded(True, animate=False)
-            else:
-                panel.setVisible(True)
-                panel.set_expanded(self._expanded_state.get(panel, True), animate=False)
-            matched_any = matched_any or panel_matched
+        self._filtering = True
+        try:
+            for panel, rows in self._panels:
+                panel_matched = False
+                for widget, keywords in rows:
+                    ok = not tokens or all(token in keywords for token in tokens)
+                    widget.setVisible(ok)
+                    if ok:
+                        panel_matched = True
+                if tokens:
+                    panel.setVisible(panel_matched)
+                    if panel_matched:
+                        # 搜索结果直接展开，省得再点一次
+                        panel.set_expanded(True, animate=False)
+                else:
+                    panel.setVisible(True)
+                    panel.set_expanded(self._expanded_state.get(panel, True), animate=False)
+                matched_any = matched_any or panel_matched
+        finally:
+            self._filtering = False
         self.no_match.setVisible(bool(tokens) and not matched_any)
         if tokens:
             self.scroll.verticalScrollBar().setValue(0)

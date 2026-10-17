@@ -1,5 +1,7 @@
 # Kelire · 桌面动漫下载器
 
+> 仓库地址：<https://github.com/Yelastforbilibili/Kelire>
+
 面向 Windows 的个人向动漫下载与观看工具：从天天动漫的镜像站取数据，内置多线程 HLS 代理让在线观看不受原站单连接限速的影响，同时支持按集把视频下载到本地。
 
 ## 运行
@@ -7,8 +9,14 @@
 只需要 Python 环境，不用打包：
 
 ```
-pip install PySide6 yt-dlp pycryptodome imageio-ffmpeg requests pillow
+pip install -r requirements.txt
 python run.py
+```
+
+或者手动装依赖：
+
+```
+pip install PySide6 yt-dlp pycryptodome imageio-ffmpeg requests pillow
 ```
 
 也可以双击 `start.bat`（自动找 `pythonw.exe` 静默启动，不弹黑框）。
